@@ -92,6 +92,9 @@ async function main() {
   const outDir = path.resolve(args.out);
   const repoDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 
+  const checkUpgrade = path.join(repoDir, 'scripts/cdp_check_upgrade_modal.mjs');
+  const dismissUpgrade = path.join(repoDir, 'scripts/cdp_dismiss_upgrade_modal.mjs');
+
   const proj = JSON.parse(fs.readFileSync(projectPath, 'utf-8'));
   const timeoutMs = args.timeoutMs || 300000;
 
@@ -159,6 +162,19 @@ async function main() {
 
     // Wait for navigation to a post page.
     sh('node', [path.join(repoDir, 'scripts/cdp_wait_for_post.mjs')], { env: { ...process.env, CDP_WS: args.cdpWs, TIMEOUT_MS: '30000' } });
+
+    // AUTO-DISMISS SuperGrok modal (and back off to avoid spam/cooldown)
+    try {
+      const st = shCapture('node', [checkUpgrade], { env: { ...process.env, CDP_WS: args.cdpWs } });
+      const j = JSON.parse(st || '{}');
+      if (j.upgrade) {
+        console.log('[warn] SuperGrok upgrade modal detected; dismissing + waiting 15 minutes before retry');
+        try { sh('node', [dismissUpgrade], { env: { ...process.env, CDP_WS: args.cdpWs } }); } catch {}
+        // 15 minute backoff to reduce spam flags / cooldown flakiness
+        await new Promise(r => setTimeout(r, 15 * 60 * 1000));
+      }
+    } catch {}
+
 
     // Now click Make video on the post page (best-effort).
     try {
