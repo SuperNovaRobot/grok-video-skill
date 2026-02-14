@@ -152,11 +152,20 @@ async function main() {
     // 2) attach seed
     sh('node', [path.join(repoDir, 'scripts/cdp_attach_image.mjs')], { env: { ...process.env, CDP_WS: args.cdpWs, IMG_PATH: seedPath } });
 
-    // 3) make video (twice to handle imagine->post)
+    // 3) make video (two-step flow)
+    //  - Step A: submit from /imagine (often navigates to /imagine/post/...)
+    //  - Step B: click Make video on the post page to start rendering
     sh('node', [path.join(repoDir, 'scripts/cdp_make_video.mjs')], { env: { ...process.env, CDP_WS: args.cdpWs, PROMPT_FILE: promptFile } });
-    try { sh('node', [path.join(repoDir, 'scripts/cdp_make_video.mjs')], { env: { ...process.env, CDP_WS: args.cdpWs, PROMPT_FILE: promptFile } }); } catch {}
 
-    // 4) wait
+    // Wait for navigation to a post page.
+    sh('node', [path.join(repoDir, 'scripts/cdp_wait_for_post.mjs')], { env: { ...process.env, CDP_WS: args.cdpWs, TIMEOUT_MS: '30000' } });
+
+    // Now click Make video on the post page (best-effort).
+    try {
+      sh('node', [path.join(repoDir, 'scripts/cdp_make_video.mjs')], { env: { ...process.env, CDP_WS: args.cdpWs, PROMPT_FILE: promptFile } });
+    } catch {}
+
+    // 4) wait for the actual rendered mp4
     sh('node', [path.join(repoDir, 'scripts/cdp_wait_for_video.mjs')], { env: { ...process.env, CDP_WS: args.cdpWs, TIMEOUT_MS: String(timeoutMs) } });
 
     // 5) download
