@@ -1,0 +1,61 @@
+{
+  "name": "bb_openclaw_nova_lobster_v1",
+  "seed": { "tailFrames": 10, "pickFromTail": 1 },
+  "defaults": {
+    "characterLock": "Same character as the attached image (Nova). Keep face, horns, eyes, outfit, and identity consistent. Keep the same voice tone across scenes.",
+    "negatives": "No landscapes. No nature scenes. No volcano/lava. No aerial shots. No random objects. No text-heavy UI. No clutter.",
+    "style": "premium, cinematic, calm motion, clean lighting, subtle neon accents"
+  },
+  "scenes": [
+    {
+      "scene": "Nova speaks to camera in a modern studio. Subtle ember glow. A small, tasteful lobster icon appears on a holographic panel behind her.",
+      "say": "I’m Nova. At Business Builders, OpenClaw is the agent framework we trust to turn ideas into systems.",
+      "how": "calm, intelligent, intimate."
+    },
+    {
+      "scene": "A minimal diagram fades in: Tools → Skills → Automations. A small lobster silhouette sits near the word ‘Skills’.",
+      "say": "OpenClaw isn’t a chatbot. It’s tools, skills, and automation—wired together to actually do work.",
+      "how": "measured, confident."
+    },
+    {
+      "scene": "Holographic cards labeled: Browser, Web Search, Files, Processes. Nova gestures softly; cards align neatly.",
+      "say": "We give it hands: browser control, web search, file access, background jobs. Then we teach it the workflow.",
+      "how": "clear, thoughtful."
+    },
+    {
+      "scene": "A ‘Skill’ book motif opens, showing checklists. A small lobster charm dangles from the corner like a keychain.",
+      "say": "Skills are playbooks. They encode the exact steps—so the agent is repeatable, not random.",
+      "how": "quiet certainty."
+    },
+    {
+      "scene": "A timeline shows a nightly run: discovery → transcript → rank → notes. The lobster icon highlights ‘rank’.",
+      "say": "We use it to discover what matters, capture transcripts, rank signal, and save it into our knowledge base.",
+      "how": "calm, practical."
+    },
+    {
+      "scene": "A ‘Video’ pipeline appears: prompt → generate → chain frames → final cut. Lobster icon sits beside ‘chain frames’.",
+      "say": "We even automate creative work—multi-scene video generation with consistent characters, end to end.",
+      "how": "confident, understated."
+    },
+    {
+      "scene": "A dashboard: ‘Reliability’ with green checks: bounded timeouts, retries, logs. A lobster stamp marks ‘approved’.",
+      "say": "The difference is discipline: bounded timeouts, logs, retries. Automation you can run every day.",
+      "how": "steady, reassuring."
+    },
+    {
+      "scene": "Nova leans in slightly. Minimal text appears: ‘Your business, less chaos’. Lobster icon is subtle in corner.",
+      "say": "If your business is chaos—leads, follow-ups, ops—OpenClaw is how we turn that into a machine.",
+      "how": "intimate, founder-to-founder."
+    },
+    {
+      "scene": "A clean end-to-end flow: Lead → Reply → Follow-up → Booked call → Delivered. Lobster icon nods like a mascot.",
+      "say": "You don’t need more apps. You need one agentic system that keeps the loop closed.",
+      "how": "smart, calm close."
+    },
+    {
+      "scene": "End card: Business Builders • Nova • Built on OpenClaw. A small lobster emblem sits next to OpenClaw.",
+      "say": "This is OpenClaw—our framework for agents that actually ship. If you know, you know.",
+      "how": "confident, warm, minimal."
+    }
+  ]
+}
