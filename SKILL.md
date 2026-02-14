@@ -65,7 +65,7 @@ Key fields:
 - `scenes[]`: `{ scene, say, how }`
 
 ### 2) Run the project
-You need a Grok Imagine tab open in the OpenClaw-managed browser.
+You need a Grok Imagine tab open in the **OpenClaw-managed isolated browser** (profile=`openclaw`).
 
 1) Get the tab `wsUrl` via OpenClaw:
 - `browser.tabs` (profile=`openclaw`) → pick the Grok tab → copy `wsUrl`
