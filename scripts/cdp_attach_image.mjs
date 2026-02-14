@@ -90,8 +90,15 @@ ws.addEventListener('open', async () => {
       const dataUrl = window.__oc_img_dataurl;
       if (!dataUrl) return { ok:false, err:'missing dataUrl' };
 
-      // Find file input
-      const input = document.querySelector('input[type=file]');
+      // Find (or reveal) file input
+      let input = document.querySelector('input[type=file]');
+      if (!input) {
+        // Try clicking the Attach button to reveal the file input
+        const btns = [...document.querySelectorAll('button')];
+        const attachBtn = btns.find(b => /^\s*attach\s*$/i.test(b.textContent||'') || /attach/i.test(b.getAttribute('aria-label')||''));
+        if (attachBtn) attachBtn.click();
+        input = document.querySelector('input[type=file]');
+      }
       if (!input) return { ok:false, err:'no input[type=file]' };
 
       const r = await fetch(dataUrl);
