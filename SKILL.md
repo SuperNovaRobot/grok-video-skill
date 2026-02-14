@@ -5,7 +5,13 @@ description: Automate Grok Imagine (grok.com/imagine) multi-scene video generati
 
 # grok-video
 
-Create a multi-scene video using **Grok Imagine** by chaining scenes: download each ~6s clip, extract the **last frame** with ffmpeg, upload it as the next scene’s starting image, then merge clips.
+Create a multi-scene video using **Grok Imagine** by chaining scenes:
+- download each ~6s clip
+- extract a stable seed frame (**"10-from-last"**)
+- upload it as the next scene’s starting image
+- merge clips into a final MP4
+
+This skill is **CDP-first** (raw Chrome DevTools Protocol) to avoid flaky UI automation and Cloudflare/CORS download issues.
 
 ## Preconditions (don’t guess)
 - A Grok tab is attached via **Browser Relay** (profile=`chrome`) and is on `https://grok.com/imagine`.
@@ -44,16 +50,54 @@ HOW SHE SAYS IT: <tone/delivery>
 - **Hard negatives:** explicitly say what to avoid (e.g., "no landscapes, no volcano/lava, no aerial shots").
 - **Front-load intent:** the first sentence of `SCENE:` should say the subject (e.g., "Nova speaking to camera in a studio") before stylistic details.
 
-## Procedure (manual invoke workflow)
+## Preferred workflow (deterministic runner)
+
+**Do this by default.** It’s resumable, repeatable, and exactly matches what we run in production.
+
+### 1) Create a project JSON
+A project defines the script (scene visuals + dialogue) and the chaining rules.
+
+Example: `projects/bb_nova_intro_v1.json`
+
+Key fields:
+- `seed.tailFrames = 10` and `seed.pickFromTail = 1` → **use frame_001.png = “10-from-last”**
+- `defaults.characterLock` + `defaults.negatives` → prevents drift (e.g., “volcano”)
+- `scenes[]`: `{ scene, say, how }`
+
+### 2) Run the project
+You need a Grok Imagine tab open in the OpenClaw-managed browser.
+
+1) Get the tab `wsUrl` via OpenClaw:
+- `browser.tabs` (profile=`openclaw`) → pick the Grok tab → copy `wsUrl`
+
+2) Run:
+```bash
+node scripts/run_project.mjs \
+  --project projects/bb_nova_intro_v1.json \
+  --cdp-ws "ws://127.0.0.1:18800/devtools/page/<TAB_ID>" \
+  --out /home/clawdbot/clawd/outputs/grok-video/<project_slug> \
+  --anchor /abs/path/to/anchor.png
+```
+
+**Resumable:** re-run the same command; completed scenes are skipped.
+
+### 3) Outputs
+- `videos/scene_XX.mp4`
+- `tail/scene_XX/frame_001.png … frame_010.png`
+- `frames/scene_XX_seed.png` (seed for next scene; default = `tail/.../frame_001.png`)
+- `output/final.mp4`
+- `runlog.md` (includes prompts + file paths)
+
+---
+
+## Manual invoke workflow (fallback)
+
+Use this only for debugging UI changes or one-off experimentation.
 
 ### 1) Prepare project
 1. Pick `project_slug` (short, filesystem safe)
-2. Create folders: `videos/`, `frames/`, `output/`
-3. Write a `runlog.md` header with:
-   - date/time
-   - topic
-   - scene count
-   - starting image path
+2. Create folders: `videos/`, `tail/`, `frames/`, `output/`
+3. Write a `runlog.md` header with topic + starting image
 
 ### 2) Scene loop (1..N)
 For each scene:
@@ -63,25 +107,27 @@ For each scene:
 2) Attach the starting image (reliable method)
 
 **Primary (fully automated): CDP chunk-inject DataURL → DataTransfer attach**
-- This avoids OS file pickers and avoids brittle one-shot `evaluate` payloads.
-- Run:
-```bash
-CDP_WS='<ws://127.0.0.1:18800/devtools/page/...>' \
-IMG_PATH='/abs/path/to/image.png' \
-node /home/clawdbot/clawd/skills/grok-video/scripts/cdp_attach_image.mjs
-```
-- Then confirm the UI shows the attached image preview.
-
-Fallback A: Browser upload (sometimes Grok clears the input)
-- Click **Attach → Upload a file** and use `browser.upload` on the discovered `input[type=file]`.
-
-Fallback B (legacy): manual DataTransfer injection via browser.evaluate (avoid if possible).
+- Script: `scripts/cdp_attach_image.mjs`
+- Why: avoids OS file pickers and avoids flaky `browser.upload`.
 
 3) Type the motion prompt (3-part format) and click **Make video**.
 
+**Primary (fully automated): CDP set composer + click button**
+- Script: `scripts/cdp_make_video.mjs`
+- Note: Grok often requires **two clicks**:
+  - first click on `/imagine` submits and navigates to a post
+  - second click on `/imagine/post/...` actually starts the render
+  - the runner calls it twice; the second is best-effort.
+
 4) Wait for generation to finish and the player to load.
 
+**Primary:** `scripts/cdp_wait_for_video.mjs`
+- Waits until we’re on `/imagine/post/...` AND a `<video>` has a real `.mp4` URL.
+
 5) Download clip to `videos/scene_XX.mp4`.
+
+**Primary:** `scripts/cdp_download_mp4.mjs`
+- Tries in-page fetch; if blocked, falls back to CDP Fetch streaming.
 
 **Primary (fully automated, Cloudflare-proof, no temp chunk files): CDP in-tab capture → stream bytes → write MP4**
 - Don’t rely on the UI “Download” button (often doesn’t trigger a real browser download event).
@@ -107,8 +153,9 @@ Fallback B: click **Download** in the UI and move the newest `grok-video-*.mp4` 
 6) Validate the file exists and is not tiny.
 
 7) Extract the **tail frames** and pick the seed (more stable than absolute last frame):
+- Script: `scripts/extract_tail_frames.py`
 - Extract last 10 frames:
-  - `python3 skills/grok-video/scripts/extract_tail_frames.py <mp4> <out_dir> --frames 10`
+  - `python3 scripts/extract_tail_frames.py <mp4> <out_dir> --frames 10`
 - Use the seed:
   - `<out_dir>/frame_001.png`  (this is "10-from-last")
 
