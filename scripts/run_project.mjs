@@ -170,8 +170,9 @@ async function main() {
       if (j.upgrade) {
         console.log('[warn] SuperGrok upgrade modal detected; dismissing + waiting 15 minutes before retry');
         try { sh('node', [dismissUpgrade], { env: { ...process.env, CDP_WS: args.cdpWs } }); } catch {}
-        // 15 minute backoff to reduce spam flags / cooldown flakiness
-        await new Promise(r => setTimeout(r, 15 * 60 * 1000));
+        // Backoff to reduce spam flags / cooldown flakiness (default 15m; override with BACKOFF_MS)
+        const backoffMs = Number(process.env.BACKOFF_MS || (15 * 60 * 1000));
+        if (backoffMs > 0) await new Promise(r => setTimeout(r, backoffMs));
       }
     } catch {}
 
