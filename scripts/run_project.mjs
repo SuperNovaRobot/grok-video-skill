@@ -168,11 +168,12 @@ async function main() {
       const st = shCapture('node', [checkUpgrade], { env: { ...process.env, CDP_WS: args.cdpWs } });
       const j = JSON.parse(st || '{}');
       if (j.upgrade) {
-        console.log('[warn] SuperGrok upgrade modal detected; dismissing + waiting 15 minutes before retry');
-        try { sh('node', [dismissUpgrade], { env: { ...process.env, CDP_WS: args.cdpWs } }); } catch {}
-        // Backoff to reduce spam flags / cooldown flakiness (default 15m; override with BACKOFF_MS)
         const backoffMs = Number(process.env.BACKOFF_MS || (15 * 60 * 1000));
+        console.log(`[warn] SuperGrok upgrade modal detected; dismissing + backoff ${backoffMs}ms then retry click`);
+        try { sh('node', [dismissUpgrade], { env: { ...process.env, CDP_WS: args.cdpWs } }); } catch {}
         if (backoffMs > 0) await new Promise(r => setTimeout(r, backoffMs));
+        // After dismiss/backoff, click Make video again on the post page.
+        try { sh('node', [path.join(repoDir, 'scripts/cdp_make_video.mjs')], { env: { ...process.env, CDP_WS: args.cdpWs, PROMPT_FILE: promptFile } }); } catch {}
       }
     } catch {}
 
