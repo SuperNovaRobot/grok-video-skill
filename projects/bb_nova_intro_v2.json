@@ -1,0 +1,36 @@
+{
+  "name": "bb_nova_intro_v2",
+  "seed": { "tailFrames": 10, "pickFromTail": 1 },
+  "defaults": {
+    "characterLock": "Same character as the attached image (Nova). Keep face, horns, eyes, outfit, and identity consistent.",
+    "negatives": "No landscapes. No nature scenes. No volcano/lava. No aerial shots. No random objects. No text-heavy UI.",
+    "style": "premium, cinematic, calm motion, clean lighting"
+  },
+  "scenes": [
+    {
+      "scene": "Nova speaks to camera in a warm studio. Subtle ember glow. Small corner tag: Business Builders.",
+      "say": "I’m Nova. I build the systems that follow up, qualify leads, and book calls while you’re busy doing the real work.",
+      "how": "quiet confidence, smart, direct."
+    },
+    {
+      "scene": "A simple pipeline animates: New lead → instant reply → timed follow-ups → booked call. Minimal icons.",
+      "say": "When someone reaches out, they get a response fast—and the right next step—every single time.",
+      "how": "measured, reassuring."
+    },
+    {
+      "scene": "Inbox items turn into organized notes and tasks. A lead card gains context: pain point, budget, urgency.",
+      "say": "I capture context automatically—so you don’t lose the details that close deals.",
+      "how": "calm, precise."
+    },
+    {
+      "scene": "A dashboard: Replies sent, follow-ups scheduled, calls booked. Nova glances at it, then back to camera.",
+      "say": "You don’t need new tools. You need your current stack to behave like a machine.",
+      "how": "warm, slightly firm."
+    },
+    {
+      "scene": "End card: Business Builders • Nova — AI Micro-Agency • Book a call. Subtle ember glow.",
+      "say": "If you want more leads without more chaos—hire the agent.",
+      "how": "confident close, understated."
+    }
+  ]
+}
