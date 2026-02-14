@@ -91,14 +91,26 @@ ws.addEventListener('open', async () => {
       if (!dataUrl) return { ok:false, err:'missing dataUrl' };
 
       // Find (or reveal) file input
-      let input = document.querySelector('input[type=file]');
+      // Poll for input (UI can render lazily)
+      let input = null;
+      for (let i = 0; i < 20; i++) {
+        input = document.querySelector('input[type=file]');
+        if (input) break;
+        await new Promise(r => setTimeout(r, 250));
+      }
+
       if (!input) {
         // Try clicking the Attach button to reveal the file input
         const btns = [...document.querySelectorAll('button')];
         const attachBtn = btns.find(b => /^\s*attach\s*$/i.test(b.textContent||'') || /attach/i.test(b.getAttribute('aria-label')||''));
         if (attachBtn) attachBtn.click();
-        input = document.querySelector('input[type=file]');
+        for (let i = 0; i < 20; i++) {
+          input = document.querySelector('input[type=file]');
+          if (input) break;
+          await new Promise(r => setTimeout(r, 250));
+        }
       }
+
       if (!input) return { ok:false, err:'no input[type=file]' };
 
       const r = await fetch(dataUrl);
