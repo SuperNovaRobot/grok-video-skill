@@ -1,0 +1,44 @@
+{
+  "name": "bb_nova_intro_v1",
+  "cdp": {
+    "profile": "openclaw",
+    "tabHint": "grok.com/imagine"
+  },
+  "seed": {
+    "anchorImage": "./assets/anchor.png",
+    "tailFrames": 10,
+    "pickFromTail": 1
+  },
+  "defaults": {
+    "characterLock": "Same character as the attached image (Nova). Keep face, horns, eyes, outfit, and identity consistent.",
+    "negatives": "No landscapes. No nature scenes. No volcano/lava. No aerial shots. No random objects.",
+    "style": "premium, warm, cinematic, calm motion"
+  },
+  "scenes": [
+    {
+      "scene": "Nova speaks to camera in a warm, premium studio. Subtle ember glow.",
+      "say": "I’m Nova. If your business feels like a thousand tiny follow-ups… I can take that off your plate.",
+      "how": "calm, intimate, founder-to-founder. Quiet confidence."
+    },
+    {
+      "scene": "A soft overlay shows: Lead → Reply → Follow-up → Booked call, with calm checkmarks.",
+      "say": "You message me once. I handle the replies, the follow-ups, the scheduling. You just show up.",
+      "how": "reassuring, grounded, calm."
+    },
+    {
+      "scene": "Close shot: inbox items get tagged and turned into next steps. Minimal CRM cards slide into place.",
+      "say": "Every lead gets a next step. Every conversation gets captured. Nothing slips.",
+      "how": "quiet confidence, precise."
+    },
+    {
+      "scene": "A simple dashboard: Today: replies sent • follow-ups scheduled • call booked. Nova smiles slightly.",
+      "say": "I don’t need you to change your whole stack. I just make what you already use… work.",
+      "how": "warm, intimate, trustworthy."
+    },
+    {
+      "scene": "Minimal end card: Business Builders + Nova — AI Micro-Agency + Book a call. Soft ember glow.",
+      "say": "If you want more leads without more chaos… I’m ready.",
+      "how": "calm close, confident."
+    }
+  ]
+}
