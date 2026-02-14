@@ -1,0 +1,36 @@
+{
+  "name": "bb_openclaw_nova_v2_5scenes",
+  "seed": { "tailFrames": 10, "pickFromTail": 1 },
+  "defaults": {
+    "characterLock": "Same character as the attached image (Nova). Keep face, horns, eyes, outfit, and identity consistent. Keep the same voice tone across scenes. Speak the WHAT SHE SAYS line exactly. Do not say: welcome, welcome to, welcome to business builders.",
+    "negatives": "No landscapes. No nature scenes. No volcano/lava. No aerial shots. No random objects. No text-heavy UI. No clutter.",
+    "style": "premium, cinematic, calm motion, clean lighting, subtle neon accents"
+  },
+  "scenes": [
+    {
+      "scene": "Nova speaks to camera in a warm studio. Subtle ember glow.",
+      "say": "I’m Nova. OpenClaw is the agent framework we use to turn workflows into systems that actually run.",
+      "how": "calm, intelligent, intimate."
+    },
+    {
+      "scene": "A minimal diagram fades in: Tools → Skills → Automations.",
+      "say": "OpenClaw gives an agent real capabilities: browser control, files, web research, background jobs.",
+      "how": "measured, confident."
+    },
+    {
+      "scene": "A ‘Skill’ playbook opens, showing checklists and a repeatable workflow.",
+      "say": "Skills make it reproducible. The same inputs produce the same steps, with logs and guardrails.",
+      "how": "quiet certainty."
+    },
+    {
+      "scene": "A clean pipeline animates: lead → reply → follow-up → booked call. Everything stays organized.",
+      "say": "At Business Builders, we use OpenClaw to reduce chaos: follow-ups, scheduling, and ops—done consistently.",
+      "how": "warm, founder-to-founder."
+    },
+    {
+      "scene": "End card: Business Builders • Nova • Built on OpenClaw. Soft ember glow.",
+      "say": "This is OpenClaw—our framework for agents that ship. If you know, you know.",
+      "how": "confident close, understated."
+    }
+  ]
+}
